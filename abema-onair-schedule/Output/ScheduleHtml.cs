@@ -134,12 +134,52 @@ namespace abema_onair_schedule.Output {
             }
             return "<table><tr>\n" + sb.ToString() + "\n</tr></table>";
         }
+        static String getVBackground(int hour) {
+            String backgroundColor = "";
+            switch (hour % 24) {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                    backgroundColor = "linear-gradient(to bottom, #9370db 1%,#7757ba 100%)";
+                    break;
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                case 11:
+                    backgroundColor = "linear-gradient(to bottom, #20B2AA 1%,#109B94 100%)";
+                    break;
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                case 16:
+                case 17:
+                    backgroundColor = "linear-gradient(to bottom, #FFA07A 1%,#DE8460 100%)";
+                    break;
+                case 18:
+                case 19:
+                case 20:
+                case 21:
+                case 22:
+                case 23:
+                    backgroundColor = "linear-gradient(to bottom, #6495ED 1%,#4977C8 100%)";
+                    break;
+                default:
+                    break;
+            }
+            return backgroundColor;
+
+        }
         // 縦軸のhtmlを返す 引数で渡された全ての日時
         static String getHeaderVAllTime(DateTime from, DateTime to) {
             StringBuilder sb = new StringBuilder();
             for (var now = from; now < to; now += TimeSpan.FromHours(1)) {
-                // <tr><th style="height:100px;">1</th></tr>
-                String add = $@"<th style=""height: calc( var(--one-min-height) * 60 );""><div class=""ymd"">{now:yyyy}<br>{now:MM}/{now:dd}<br>({now:ddd})</div><div class=""hour"">{now:HH}</div></th>";
+                String add = $@"<th style=""height: calc( var(--one-min-height) * 60 );color:black;background:{getVBackground(now.Hour)};""><div class=""ymd"">{now:yyyy}<br>{now:MM}/{now:dd}<br>({now:ddd})</div><div class=""hour"">{now:HH}</div></th>";
                 sb.AppendLine($@"<tr>{add}</tr>");
             }
             return "<table>\n" + sb.ToString() + "\n</table>";
@@ -149,45 +189,7 @@ namespace abema_onair_schedule.Output {
             // 時間の一覧を出力
             StringBuilder sb = new StringBuilder();
             for (var i = ScheduleHtml.StartHour; i < ScheduleHtml.StartHour + 24; i++) {
-                String backgroundColor = "";
-                String textColor = "black";
-                switch (i % 24) {
-                    case 0:
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                        backgroundColor = "linear-gradient(to bottom, #9370db 1%,#7757ba 100%)";
-                        break;
-                    case 6:
-                    case 7:
-                    case 8:
-                    case 9:
-                    case 10:
-                    case 11:
-                        backgroundColor = "linear-gradient(to bottom, #20B2AA 1%,#109B94 100%)";
-                        break;
-                    case 12:
-                    case 13:
-                    case 14:
-                    case 15:
-                    case 16:
-                    case 17:
-                        backgroundColor = "linear-gradient(to bottom, #FFA07A 1%,#DE8460 100%)";
-                        break;
-                    case 18:
-                    case 19:
-                    case 20:
-                    case 21:
-                    case 22:
-                    case 23:
-                        backgroundColor = "linear-gradient(to bottom, #6495ED 1%,#4977C8 100%)";
-                        break;
-                    default:
-                        break;
-                }
-                String add = $@"<th style=""height: calc( var(--one-min-height) * 60 );color:{textColor};background:{backgroundColor};""><div class=""hour"">{i % 24}</div></th>";
+                String add = $@"<th style=""height: calc( var(--one-min-height) * 60 );color:black;background:{getVBackground(i)};""><div class=""hour"">{i % 24}</div></th>";
                 sb.AppendLine($@"<tr>{add}</tr>");
             }
             return "<table>\n" + sb.ToString() + "\n</table>";

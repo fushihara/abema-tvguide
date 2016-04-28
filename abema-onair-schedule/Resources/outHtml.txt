@@ -1,4 +1,6 @@
-﻿<style type="text/css">
+﻿<!DOCTYPE html>
+<meta charset="UTF-8">
+<style type="text/css">
 :root {
 	--ch-width: 200px;
 	--ch-height: 50px;
@@ -9,7 +11,7 @@
 }
 *{word-break: break-all;}
 /* 基本のテーブル定義 */
-body{margin:0;}
+body{margin:0;margin: 0;bottom: 0px;position: absolute;top: 0px;left: 0px;right: 0px;}
 #zentai>div>table {border:1px solid   #000000;border-collapse:collapse;table-layout:fixed;}
 #zentai>#data>table>tbody>tr>td { margin:0;padding:0;border:0;vertical-align: top;}
 #zentai>#data>table>tbody>tr>td>table {margin:0;padding:0;border-right: solid 1px #000;;table-layout:fixed;}
@@ -31,7 +33,7 @@ body{margin:0;}
 #zentai>div>table tr:nth-child(even) td{background-color:#E8E8FF;color:#000000;}
 #header_v th{width:100px}
 #header_v div.hour{font-size:x-large;}
-#header_v div.ymd{margin: 0px 5px;color: gray;font-size: small;}
+#header_v div.ymd{margin: 0px 5px;color:#3C3C3C;font-size: small;}
 #header_h>table   ,#data>table   {width:calc(  var(--ch-count) * var( --ch-width )  );}
 #header_h>table th,#data>table th{width:calc( var(--ch-width) - 3px);}
 #header_h>table td,#data>table td{width:var(--ch-width);}
