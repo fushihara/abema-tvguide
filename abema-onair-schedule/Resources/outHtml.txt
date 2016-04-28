@@ -1,0 +1,185 @@
+﻿<style type="text/css">
+:root {
+	--ch-width: 200px;
+	--ch-height: 50px;
+	--one-min-height: 3px;
+	--one-hour-width: 50px;
+	--ch-count: <!--CH-COUNT -->;
+	--line-offset-min:10;
+}
+*{word-break: break-all;}
+/* 基本のテーブル定義 */
+body{margin:0;}
+#zentai>div>table {border:1px solid   #000000;border-collapse:collapse;table-layout:fixed;}
+#zentai>#data>table>tbody>tr>td { margin:0;padding:0;border:0;vertical-align: top;}
+#zentai>#data>table>tbody>tr>td>table {margin:0;padding:0;border-right: solid 1px #000;;table-layout:fixed;}
+#zentai>#data>table>tbody>tr>td>table.vertical-table-today{border-left: solid 2px #F00;border-right: solid 2px #F00;}
+#zentai>#data>table>tbody>tr>td>table td{vertical-align: top;}
+#zentai>#data>table table td.one-program-1{height:auto;padding: 0;}
+#zentai>#data>table table td.one-program-1 > div.one-program-2 {overflow:hidden;background-size: cover;background-repeat: no-repeat;background-position: center;}
+#zentai>#data>table table td.one-program-1 > div.one-program-2 > div.one-program-3{background-color: rgba(255, 255, 255, 0.76);height: 100%;font-size:small;}
+#zentai>#data>table table td.one-program-1 > div.one-program-2 > div.one-program-3 .startTime{font-family: monospace;padding: 1px;}
+#zentai>#data>table table td.one-program-1 > div.one-program-2 > div.one-program-3 .title{font-weight:bold;color: #000;}
+#zentai>#data>table table td.one-program-1 > div.one-program-2 > div.one-program-3 .mark-first{color: #FFF;font-size: x-small;border: solid 1px #000;padding: 0;background-color: #F00;}
+#zentai>#data>table table td.one-program-1 > div.one-program-2 > div.one-program-3 .program-thumbnail{width: calc( var(--ch-width) - 1px );}
+#zentai>#data>table table.vertical-table-today td.one-program-1 > div.one-program-2 > div.one-program-3 .program-thumbnail{width: calc( var(--ch-width) - 4px );}
+
+#zentai>div>table td{border:1px solid #000000;height:calc( var(--ch-height) - 1px );}
+#zentai>div>table th{border:1px solid #000000;height:calc( var(--ch-height) - 1px );}
+#zentai>div>table th{background-color:#FFBB88;color:#000000;}
+#zentai>div>table tr:nth-child(odd)  td{background-color:#C8C8E8;color:#000000;}
+#zentai>div>table tr:nth-child(even) td{background-color:#E8E8FF;color:#000000;}
+#header_v th{width:100px}
+#header_v div.hour{font-size:x-large;}
+#header_v div.ymd{margin: 0px 5px;color: gray;font-size: small;}
+#header_h>table   ,#data>table   {width:calc(  var(--ch-count) * var( --ch-width )  );}
+#header_h>table th,#data>table th{width:calc( var(--ch-width) - 3px);}
+#header_h>table td,#data>table td{width:var(--ch-width);}
+#zentai{
+	position:relative;
+	width:calc( 100% - 60px );
+	height:calc( 100% - 60px );
+}
+#header_h {
+	position: absolute;overflow-x:hidden;overflow-y:hidden;top:0px;
+	left:var(--one-hour-width);
+	width:calc( 100% - 17px );
+}
+#header_v {
+	position: absolute;overflow-x:hidden;overflow-y:hidden;left:0px;
+	top: var(--ch-height) ;
+	width:calc( var(--one-hour-width) + 1px );
+	height:calc( 100% - 17px );
+}
+#data {
+	position: absolute;overflow-x:scroll;overflow-y:scroll;
+	left:var(--one-hour-width);
+	top: var(--ch-height);
+	width:100%;
+	height:100%;
+}
+#line{
+    background-color: rgba(255, 0, 0, 0.33);
+    height: 3px;
+    position: inherit;
+    top: calc( var( --one-min-height ) * var( --line-offset-min )  );
+    left: 0;
+    width: calc(  var(--ch-count) * var( --ch-width )  );
+    right: 0;
+}
+#scrollToNow{
+	height:calc( var(--ch-height) - 19px );
+	width:var(--one-hour-width);
+}
+#channelSelecter{
+	width:var(--one-hour-width);
+	display: block;
+}
+</style>
+<script>
+firstDate = new Date(<!--FIRST-DATE-UNIX-SEC-->*1000);
+finalDate = new Date(<!--FINAL-DATE-UNIX-SEC-->*1000);
+allChannels=<!--ALL-CHANNELS-->;
+thisFileContainChannels=<!--THIS-FILE-CONTAIN-CHANNELS-->;
+document.addEventListener("DOMContentLoaded",function(){
+	var update=function(){
+		var nowUnixTime = new Date().getTime();
+		var offset;
+		if( finalDate < nowUnixTime ){
+			offset =  (nowUnixTime-finalDate.getTime())%(finalDate.getTime()-firstDate.getTime());
+			offset /= 60;
+			offset /= 1000;
+		}else{
+			offset = ( nowUnixTime - firstDate ) / 60 / 1000;
+		}
+	    document.body.style.setProperty("--line-offset-min", offset );
+		updateTodayBorder();
+	};
+	setInterval(function(){
+		update();
+	},60*1000);
+	update();
+	setScrollToCenterLine();
+	setAllChannelSelect();
+	document.querySelector("#scrollToNow").addEventListener("click",setScrollToCenterLine,false);
+}, false ); 
+function setScrollToCenterLine(){
+	var nowLinePosition=document.querySelector("#data").scrollTop + document.querySelector("#line").getClientRects()[0].top;
+	document.querySelector("#data").scrollTop=nowLinePosition-(window.innerHeight/2);
+}
+function setAllChannelSelect(){
+	var channelSelecter=document.querySelector("#channelSelecter");
+	for(var i in allChannels){
+		var option=document.createElement("option");
+		option.text = allChannels[i].ChannelName;
+		option.value=allChannels[i].ChannelId;
+		if(1<thisFileContainChannels.length){
+			option.style.color="gray";
+			option.disabled=true;
+		}
+		channelSelecter.add(option);
+	}
+	var findIndex=function(findObject){
+		for(var i in allChannels){
+			if( allChannels[i].ChannelId==findObject.ChannelId ){
+				return i;
+			}
+		}
+		return 0;
+	};
+	if(thisFileContainChannels.length == 0 ){
+		channelSelecter.selectedIndex = 0;
+	}else{
+		channelSelecter.selectedIndex = findIndex(thisFileContainChannels[0]);
+	}
+	channelSelecter.addEventListener("change",function(e){
+		console.log(e);
+		var href=document.URL.substring(document.URL.lastIndexOf("/")+1).replace(thisFileContainChannels[0].ChannelId,e.target.value)
+		location.href="./"+href;
+	})
+}
+function updateTodayBorder(){
+	var vTables=document.querySelectorAll(".vertical-table");
+	var nowUnixSecond=new Date().getTime()/1000;
+	if( 2<=vTables.length && vTables[0].dataset.fromUnixSecond == vTables[1].dataset.fromUnixSecond ){
+		return;
+	}
+	for(var i=0;i<vTables.length;i++){
+		if( vTables[i].dataset.fromUnixSecond <= nowUnixSecond && nowUnixSecond <= vTables[i].dataset.toUnixSecond ){
+			vTables[i].classList.add("vertical-table-today");
+		}else{
+			vTables[i].classList.remove("vertical-table-today");
+		}
+	}
+}
+</script>
+</head>
+<div id="zentai">
+
+<div id="header_b">
+	<button id="scrollToNow">今</button>
+	<select id="channelSelecter"></select>
+</div>
+
+<div id="header_h"><!-- 水平ヘッダ 局 -->
+<!--HEADERH-->
+</div>
+
+<div id="header_v"><!-- 垂直ヘッダ 時間-->
+<!--HEADERV-->
+</div>
+
+<div id="data">
+<div id="line"></div>
+<!--MAIN-->
+</div>
+
+</div>
+<script type="text/javascript">
+function $E(name){ return document.getElementById(name); }
+function scroll(){
+   $E("header_h").scrollLeft= $E("data").scrollLeft;// データ部のスクロールをヘッダに反映
+   $E("header_v").scrollTop = $E("data").scrollTop;// データ部のスクロールをヘッダに反映
+   }
+$E("data").onscroll=scroll;
+</script>
