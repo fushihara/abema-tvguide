@@ -12,7 +12,10 @@
 
 ![](https://raw.githubusercontent.com/fushihara/abema-tvguide/image/imgTemp-2016-04-28-22-38-00.png)
 
- # おやくそく
+# 使い方
+  exeを実行→exeと同じディレクトリにhtmlファイルやhtmlファイルの入ったフォルダが出来る
+
+# おやくそく
  
  * .Net Framework 4.6 ビルド環境はVisual Studio 2015 Community
  * exeと同じディレクトリにiniファイル、jsonファイル、htmlファイル、ディレクトリいくつかを作ります
