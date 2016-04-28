@@ -168,23 +168,9 @@ namespace abema_onair_schedule {
             ServicePointManager.Expect100Continue = false;
             using (System.Net.WebClient wc = new System.Net.WebClient()) {
                 try {
-                    var time = DateTime.Now;
-                    time = time.AddMinutes(-time.Minute).AddSeconds(-time.Second).AddHours(1);
-                    var guid = Guid.NewGuid().ToString();
-                    wc.Encoding = Encoding.ASCII;
-                    String uploadText = $@"{{""applicationKeySecret"":""{getKeySecret(guid, time, AbemaApi.instance.SecretKey)}"",""deviceId"":""{guid}""}}";
-                    wc.Credentials = new NetworkCredential("abema", "goto");
-                    wc.Headers.Add(HttpRequestHeader.ContentType, "application/json");
-                    var res = wc.UploadString("https://api.abema.io/v1/users", uploadText);
-                    var reg = new System.Text.RegularExpressions.Regex(@"""token"":""(.+?)""");
-                    var mat = reg.Match(res);
-                    if (mat.Success == false) {
-                        return null;
-                    }
-                    String authHeader = mat.Groups[1].Value;
                     DateTime dateFrom = DateTime.Now - TimeSpan.FromDays(7);
                     DateTime dateTo = DateTime.Now + TimeSpan.FromDays(7);
-                    wc.Headers[System.Net.HttpRequestHeader.Authorization] = $"bearer {authHeader}";
+                    wc.Headers[System.Net.HttpRequestHeader.Authorization] = $"bearer {AbemaApi.instance.AuthToken}";
                     wc.Encoding = System.Text.Encoding.UTF8;
                     String json = wc.DownloadString($"https://api.abema.io/v1/media?dateFrom={dateFrom:yyyyMMdd}&dateTo={dateTo:yyyyMMdd}");
                     var data = JsonConvert.DeserializeObject<ScheduleDataset.ScheduleDataset>(json);

@@ -56,6 +56,8 @@ namespace abema_onair_schedule {
             this.UserId = userId;
             this.CreatedAt = createdAt;
             this.AuthToken = authToken;
+            checkToken();
+            System.Threading.Thread.Sleep(2 * 1000);
         }
         String settingPath() {
             String iniPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
