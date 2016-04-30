@@ -13,6 +13,7 @@
 ![](https://raw.githubusercontent.com/fushihara/abema-tvguide/image/imgTemp-2016-04-28-22-38-00.png)
 
 # 使い方
+
   exeを実行→exeと同じディレクトリにhtmlファイルやhtmlファイルの入ったフォルダが出来る
 
 # おやくそく
